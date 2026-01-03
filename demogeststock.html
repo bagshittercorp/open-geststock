@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DÉMO - Gest'Stock HACCP</title>
+    <style>
+        /* --- STYLE CSS NATIF --- */
+        :root {
+            --primary: #2563eb; --primary-dark: #1d4ed8;
+            --success: #16a34a; --danger: #dc2626; --warning: #ca8a04;
+            --bg: #f1f5f9; --surface: #ffffff; --text: #0f172a; --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; font-size: 14px; padding-bottom: 20px; }
+        
+        /* Demo Banner */
+        .demo-banner {
+            background: #fffbeb;
+            color: #92400e;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #fcd34d;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn-reset-demo {
+            background: #92400e;
+            color: white;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+        }
+
+        /* Layout */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 10px; }
+        .card { background: var(--surface); border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid var(--border); overflow: hidden; margin-bottom: 20px; }
+        .p-4 { padding: 16px; }
+        .flex { display: flex; gap: 10px; align-items: center; }
+        .flex-col { flex-direction: column; align-items: stretch; }
+        .flex-wrap { flex-wrap: wrap; }
+        .justify-between { justify-content: space-between; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        @media(min-width: 768px) { .grid-2 { grid-template-columns: 1fr 1fr; } .grid-3 { grid-template-columns: 1fr 1fr 1fr; } .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; } }
+        
+        /* Typography */
+        h1 { margin: 0; font-size: 1.25rem; color: var(--text); }
+        h2, h3 { margin: 0 0 10px 0; font-size: 1rem; font-weight: 600; }
+        .text-sm { font-size: 0.875rem; } .text-xs { font-size: 0.75rem; }
+        .font-bold { font-weight: 700; }
+        .text-muted { color: var(--text-light); }
+        .text-danger { color: var(--danger); } .text-success { color: var(--success); }
+        
+        /* Elements */
+        button { cursor: pointer; border: none; border-radius: 6px; padding: 10px 16px; font-weight: 600; font-size: 0.9rem; transition: opacity 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        button:active { opacity: 0.7; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: #fee2e2; color: var(--danger); }
+        .btn-ghost { background: transparent; color: var(--text-light); }
+        .btn-tab { flex: 1; background: transparent; color: var(--text-light); border-bottom: 3px solid transparent; border-radius: 0; }
+        .btn-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: white; }
+        
+        input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; background: white; }
+        input:focus, select:focus { outline: 2px solid var(--primary); border-color: transparent; }
+        
+        /* Table */
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th { text-align: left; padding: 12px; background: #f8fafc; color: var(--text-light); font-size: 0.75rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        
+        /* Badges */
+        .badge { padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: bold; display: inline-block; }
+        .bg-blue-100 { background: #dbeafe; color: #1e40af; }
+        .bg-green-100 { background: #dcfce7; color: #166534; }
+        .bg-red-100 { background: #fee2e2; color: #991b1b; }
+        .bg-yellow-100 { background: #fef9c3; color: #854d0e; }
+    </style>
+</head>
+<body>
+
+<!-- BANDEAU DEMO -->
+<div class="demo-banner">
+    <span>⚠️ <strong>MODE DÉMO :</strong> Vous pouvez tout tester, les données seront effacées à la fermeture de l'onglet.</span>
+    <button class="btn-reset-demo" onclick="app.hardReset()">🔄 Réinitialiser la Démo</button>
+    <a href="index.html" style="color:#92400e; font-size:0.8rem; margin-left:10px;">Retour Accueil</a>
+</div>
+
+<div class="container">
+    <!-- HEADER -->
+    <div class="card p-4 flex flex-wrap justify-between">
+        <div class="flex">
+            <div style="background:#dbeafe; padding:8px; border-radius:8px;">📦</div>
+            <div>
+                <h1>Gest'Stock HACCP</h1>
+                <div class="text-xs text-muted">Version de Démonstration</div>
+            </div>
+        </div>
+        <div class="flex flex-wrap">
+            <button class="btn-primary" onclick="app.exportLogs()">📄 Registre</button>
+            <button class="btn-primary" style="background:var(--success)" onclick="app.exportInventory()">⬇ Inventaire</button>
+            <button class="btn-primary" style="background:#059669" onclick="app.setTab('contacts')">📒 Annuaire</button>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="flex" style="background:#e2e8f0; padding:4px; border-radius:8px; margin-bottom:20px; overflow-x:auto;">
+        <button class="btn-tab active" onclick="app.setTab('dashboard')" id="tab-dashboard">Stock</button>
+        <button class="btn-tab" onclick="app.setTab('entree')" id="tab-entree">Entrées</button>
+        <button class="btn-tab" onclick="app.setTab('sortie')" id="tab-sortie">Sorties</button>
+        <button class="btn-tab" onclick="app.setTab('logs')" id="tab-logs">Historique</button>
+    </div>
+
+    <!-- ALERTS ZONE -->
+    <div id="alerts-container"></div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main-content" class="card p-4" style="min-height: 400px;">
+        <!-- Content injected by JS -->
+    </div>
+</div>
+
+<script>
+    // --- DATA INITIALE (Base Produits Complète) ---
+    const DEFAULT_PRODUCTS = [
+        // VIANDES
+        { id: "v1", name: "Steak Haché 15% (Surgelé)", ref: "V-001", category: "Viande", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Boucherie Pro", storage: "Surgelé (-18°C)", allergens: "" },
+        { id: "v2", name: "Sauté de Veau (Frais)", ref: "V-002", category: "Viande", unit: "kg", quantity: 0, minStock: 5, isBio: false, supplier: "Boucherie Pro", storage: "Frais (+0/+4°C)", allergens: "" },
+        { id: "v3", name: "Filet de Poulet", ref: "V-003", category: "Viande", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Volaille Express", storage: "Frais (+0/+4°C)", allergens: "" },
+        { id: "v4", name: "Merguez", ref: "V-004", category: "Viande", unit: "kg", quantity: 0, minStock: 5, isBio: false, supplier: "Boucherie Pro", storage: "Frais (+0/+4°C)", allergens: "" },
+        { id: "v7", name: "Cuisses de Poulet", ref: "V-007", category: "Viande", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Volaille Express", storage: "Frais (+0/+4°C)", allergens: "" },
+        // POISSONS
+        { id: "p1", name: "Filet de Saumon", ref: "P-001", category: "Poisson", unit: "kg", quantity: 0, minStock: 5, isBio: false, supplier: "Marée Fraîche", storage: "Surgelé (-18°C)", allergens: "Poisson" },
+        { id: "p2", name: "Poisson Pané", ref: "P-002", category: "Poisson", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Marée Fraîche", storage: "Surgelé (-18°C)", allergens: "Poisson, Gluten" },
+        // CRÈMERIE
+        { id: "c1", name: "Lait UHT Demi-écrémé", ref: "L-001", category: "Crèmerie", unit: "L", quantity: 0, minStock: 24, isBio: true, supplier: "Laiterie du Val", storage: "Sec / Ambiant", allergens: "Lactose" },
+        { id: "c2", name: "Beurre Doux", ref: "L-002", category: "Crèmerie", unit: "kg", quantity: 0, minStock: 2, isBio: false, supplier: "Laiterie du Val", storage: "Frais (+0/+4°C)", allergens: "Lactose" },
+        { id: "c3", name: "Crème Liquide 30%", ref: "L-003", category: "Crèmerie", unit: "L", quantity: 0, minStock: 4, isBio: false, supplier: "Laiterie du Val", storage: "Frais (+0/+4°C)", allergens: "Lactose" },
+        { id: "c4", name: "Emmental Râpé", ref: "L-004", category: "Crèmerie", unit: "kg", quantity: 0, minStock: 5, isBio: false, supplier: "Laiterie du Val", storage: "Frais (+0/+4°C)", allergens: "Lactose" },
+        { id: "c5", name: "Yaourt Nature", ref: "L-005", category: "Crèmerie", unit: "pcs", quantity: 0, minStock: 48, isBio: true, supplier: "Laiterie du Val", storage: "Frais (+0/+4°C)", allergens: "Lactose" },
+        { id: "c6", name: "Oeufs Coquille", ref: "L-006", category: "Crèmerie", unit: "pcs", quantity: 0, minStock: 30, isBio: true, supplier: "Ferme Locale", storage: "Frais (+0/+4°C)", allergens: "Oeuf" },
+        // LÉGUMES
+        { id: "leg1", name: "Pommes de Terre", ref: "LEG-01", category: "Légumes", unit: "kg", quantity: 0, minStock: 25, isBio: false, supplier: "Primeur Local", storage: "Sec / Ambiant", allergens: "" },
+        { id: "leg2", name: "Carottes", ref: "LEG-02", category: "Légumes", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Primeur Local", storage: "Frais (+0/+4°C)", allergens: "" },
+        { id: "leg5", name: "Haricots Verts (Surgelé)", ref: "LEG-05", category: "Légumes", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Metro", storage: "Surgelé (-18°C)", allergens: "" },
+        // ÉPICERIE
+        { id: "e1", name: "Farine T55", ref: "EP-001", category: "Épicerie", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "Gluten" },
+        { id: "e2", name: "Sucre Semoule", ref: "EP-002", category: "Épicerie", unit: "kg", quantity: 0, minStock: 5, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "" },
+        { id: "e3", name: "Pâtes (Coquillettes)", ref: "EP-003", category: "Épicerie", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "Gluten" },
+        { id: "e4", name: "Riz Long Étuvé", ref: "EP-004", category: "Épicerie", unit: "kg", quantity: 0, minStock: 10, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "" },
+        { id: "e5", name: "Huile Tournesol", ref: "EP-005", category: "Épicerie", unit: "L", quantity: 0, minStock: 10, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "" },
+        { id: "e6", name: "Chocolat Pâtissier", ref: "EP-006", category: "Épicerie", unit: "kg", quantity: 0, minStock: 2, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "Lactose, Soja" },
+        { id: "e8", name: "Sauce Tomate (Boîte 4/4)", ref: "EP-008", category: "Épicerie", unit: "bt", quantity: 0, minStock: 6, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "" },
+        // ÉPICES
+        { id: "sp1", name: "Sel Fin", ref: "SP-01", category: "Épices", unit: "kg", quantity: 0, minStock: 2, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "" },
+        { id: "sp2", name: "Poivre Gris Moulu", ref: "SP-02", category: "Épices", unit: "kg", quantity: 0, minStock: 1, isBio: false, supplier: "Metro", storage: "Sec / Ambiant", allergens: "" },
+    ];
+
+    // --- LOGIQUE DE L'APPLICATION (Mode DEMO) ---
+    const app = {
+        data: {
+            products: [],
+            logs: [],
+            contacts: [],
+            activeTab: 'dashboard',
+            filterCategory: 'Tous',
+            editingId: null
+        },
+
+        init: function() {
+            // UTILISATION DE SESSIONSTORAGE POUR LA DEMO ET CLES DIFFERENTES
+            // Cela évite d'écraser les données réelles si l'utilisateur a aussi l'app sur le même PC
+            const p = sessionStorage.getItem('haccp_demo_products');
+            const l = sessionStorage.getItem('haccp_demo_logs');
+            const c = sessionStorage.getItem('haccp_demo_contacts');
+            
+            this.data.products = p ? JSON.parse(p) : JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+            this.data.logs = l ? JSON.parse(l) : [];
+            this.data.contacts = c ? JSON.parse(c) : [];
+            
+            this.render();
+        },
+
+        save: function() {
+            // Sauvegarde temporaire dans la session
+            sessionStorage.setItem('haccp_demo_products', JSON.stringify(this.data.products));
+            sessionStorage.setItem('haccp_demo_logs', JSON.stringify(this.data.logs));
+            sessionStorage.setItem('haccp_demo_contacts', JSON.stringify(this.data.contacts));
+            this.render();
+        },
+
+        hardReset: function() {
+            if(confirm("Voulez-vous remettre la démo à zéro ?")) {
+                sessionStorage.clear();
+                location.reload();
+            }
+        },
+
+        setTab: function(tab) {
+            this.data.activeTab = tab;
+            this.data.editingId = null; 
+            document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            this.render();
+        },
+
+        // --- FONCTION RESET SIMPLIFIÉE POUR LA DEMO ---
+        resetLogs: function() {
+            if(this.data.logs.length === 0) return alert("L'historique est déjà vide.");
+            
+            // Pas de mot de passe complexe pour la démo, juste une confirmation
+            if(confirm("En mode DÉMO, pas besoin de mot de passe.\n\nVider l'historique maintenant ?")) {
+                this.data.logs = [];
+                this.save();
+                alert("Historique effacé (Simulation).");
+            }
+        },
+
+        // --- RENDU VISUEL (Identique à la version Pro) ---
+        render: function() {
+            const container = document.getElementById('main-content');
+            const alerts = document.getElementById('alerts-container');
+            
+            // 1. Render Alerts
+            const lowStock = this.data.products.filter(p => p.quantity <= p.minStock);
+            let alertHTML = '';
+            if(lowStock.length > 0 && this.data.activeTab !== 'contacts') {
+                alertHTML += `<div class="card p-4 flex" style="background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; margin-bottom:10px;">
+                    <span>⚠️ <strong>Attention :</strong> ${lowStock.length} produit(s) en rupture ou stock bas.</span>
+                </div>`;
+            }
+            alerts.innerHTML = alertHTML;
+
+            // 2. Render Content based on Tab
+            if(this.data.activeTab === 'dashboard') this.renderDashboard(container);
+            else if(this.data.activeTab === 'entree') this.renderForm(container, 'ENTREE');
+            else if(this.data.activeTab === 'sortie') this.renderForm(container, 'SORTIE');
+            else if(this.data.activeTab === 'logs') this.renderLogs(container);
+            else if(this.data.activeTab === 'contacts') this.renderContacts(container);
+        },
+
+        renderDashboard: function(container) {
+            // Mode Edition
+            if(this.data.editingId) {
+                const p = this.data.products.find(x => x.id === this.data.editingId);
+                if(!p) { this.data.editingId = null; return this.render(); }
+                
+                container.innerHTML = `
+                    <div class="grid">
+                        <div class="flex justify-between"><h3>✏️ Modifier : ${p.name}</h3><button class="btn-ghost" onclick="app.data.editingId=null; app.render()">Fermer ✖</button></div>
+                        <div class="grid-3">
+                            <div class="flex-col">
+                                <label class="text-xs font-bold">Nom</label><input id="edit-name" value="${p.name}">
+                                <label class="text-xs font-bold mt-2">Référence</label><input id="edit-ref" value="${p.ref || ''}">
+                                <label class="text-xs font-bold mt-2">Catégorie</label><input id="edit-cat" value="${p.category}">
+                            </div>
+                            <div class="flex-col">
+                                <label class="text-xs font-bold">Unité</label>
+                                <select id="edit-unit">${["kg", "g", "L", "cl", "pcs", "bt", "ctn"].map(u => `<option ${u===p.unit?'selected':''}>${u}</option>`).join('')}</select>
+                                <label class="text-xs font-bold mt-2">Stockage</label>
+                                <select id="edit-storage">${["Sec / Ambiant", "Frais (+0/+4°C)", "Surgelé (-18°C)"].map(s => `<option ${s===p.storage?'selected':''}>${s}</option>`).join('')}</select>
+                                <label class="text-xs font-bold mt-2">Fournisseur</label><input id="edit-supplier" value="${p.supplier || ''}">
+                            </div>
+                            <div class="flex-col">
+                                <label class="text-xs font-bold text-danger">Allergènes</label><input id="edit-allergens" value="${p.allergens || ''}" style="background:#fff1f2">
+                                <label class="text-xs font-bold mt-2">Stock Min</label><input type="number" id="edit-min" value="${p.minStock}">
+                                <label class="flex mt-4"><input type="checkbox" id="edit-bio" ${p.isBio?'checked':''} style="width:auto; margin-right:10px;"> Produit BIO</label>
+                            </div>
+                        </div>
+                        <div class="flex" style="justify-content:flex-end; margin-top:20px;">
+                            <button class="btn-success" onclick="app.updateProduct()">💾 Enregistrer (Démo)</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Mode Liste
+            const categories = ["Tous", ...new Set(this.data.products.map(p => p.category))];
+            const filtered = this.data.filterCategory === 'Tous' ? this.data.products : this.data.products.filter(p => p.category === this.data.filterCategory);
+
+            let html = `
+                <div class="grid-2" style="margin-bottom:20px; background:#f8fafc; padding:10px; border-radius:8px;">
+                    <div class="flex">
+                        <input id="new-prod-name" placeholder="Nouveau produit...">
+                        <button class="btn-primary" onclick="app.addProduct()">➕ Créer</button>
+                    </div>
+                    <div class="flex">
+                        <span>Filtre:</span>
+                        <select onchange="app.data.filterCategory=this.value; app.render()">
+                            ${categories.map(c => `<option ${c===this.data.filterCategory?'selected':''}>${c}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead><tr><th>Produit</th><th>Détails</th><th style="text-align:right">Stock</th><th style="text-align:right">Actions</th></tr></thead>
+                        <tbody>
+            `;
+            
+            filtered.forEach(p => {
+                const isLow = p.quantity <= p.minStock;
+                html += `
+                    <tr style="${isLow ? 'background:#fff1f2' : ''}">
+                        <td>
+                            <div class="font-bold">${p.name} ${p.isBio ? '🌿' : ''}</div>
+                            <div class="text-xs text-muted">${p.ref || ''}</div>
+                            ${p.storage ? `<span class="badge bg-blue-100">${p.storage}</span>` : ''}
+                        </td>
+                        <td class="text-xs">
+                            <div>🏭 ${p.supplier || '-'}</div>
+                            <div>⚠ Min: ${p.minStock}</div>
+                            ${p.allergens ? `<div class="text-danger">🚫 ${p.allergens}</div>` : ''}
+                        </td>
+                        <td style="text-align:right; font-weight:bold; font-size:1.1em; color:${isLow ? 'red' : 'inherit'}">
+                            ${p.quantity} <span class="text-xs font-normal">${p.unit}</span>
+                        </td>
+                        <td style="text-align:right">
+                            <button class="btn-ghost" onclick="app.data.editingId='${p.id}'; app.render()">✏️</button>
+                            <button class="btn-ghost text-danger" onclick="app.deleteProduct('${p.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+        },
+
+        renderForm: function(container, type) {
+            const isEntree = type === 'ENTREE';
+            const color = isEntree ? 'success' : 'primary';
+            const sortedProducts = [...this.data.products].sort((a,b) => a.name.localeCompare(b.name));
+
+            container.innerHTML = `
+                <div style="max-width:600px; margin:0 auto;">
+                    <h2 style="color:var(--${color}); text-align:center; margin-bottom:20px;">
+                        ${isEntree ? '➕ Réception Marchandise' : '➖ Sortie de Stock'}
+                    </h2>
+                    <div class="grid-2">
+                        <div><label>Responsable</label><input id="form-user" placeholder="Nom"></div>
+                        <div>
+                            <label>Produit</label>
+                            <select id="form-product">
+                                <option value="">Choisir...</option>
+                                ${sortedProducts.map(p => `<option value="${p.id}">${p.name} (${p.quantity} ${p.unit})</option>`).join('')}
+                            </select>
+                        </div>
+                        <div><label>Quantité</label><input type="number" id="form-qty" placeholder="0.00"></div>
+                        ${isEntree ? `
+                            <div><label>Température °C</label><input type="number" id="form-temp" placeholder="3.0"></div>
+                            <div><label class="text-danger font-bold">N° Lot *</label><input id="form-batch" style="border-color:red"></div>
+                            <div><label class="text-danger font-bold">DLC *</label><input type="date" id="form-dlc" style="border-color:red"></div>
+                        ` : ''}
+                    </div>
+                    <button class="btn-${color}" style="width:100%; margin-top:20px; padding:15px;" onclick="app.submitMovement('${type}')">
+                        VALIDER ${type}
+                    </button>
+                </div>
+            `;
+        },
+
+        renderLogs: function(container) {
+            let html = `
+                <div class="flex justify-between" style="margin-bottom:15px; align-items:center;">
+                    <h3>📜 Historique des mouvements</h3>
+                    <button class="btn-danger" onclick="app.resetLogs()">🗑️ Vider l'historique</button>
+                </div>
+                <div class="table-container"><table><thead><tr><th>Date</th><th>Mvt</th><th>Produit</th><th>Qté</th><th>HACCP</th></tr></thead><tbody>
+            `;
+            this.data.logs.forEach(l => {
+                html += `
+                    <tr>
+                        <td class="text-xs">${l.date}<br><span class="text-muted">${l.user}</span></td>
+                        <td><span class="badge ${l.type==='ENTREE'?'bg-green-100':'bg-blue-100'}">${l.type}</span></td>
+                        <td class="font-bold">${l.productName}</td>
+                        <td style="text-align:right">${l.quantity}</td>
+                        <td class="text-xs">
+                            ${l.batchNumber ? `<div>Lot: ${l.batchNumber}</div>` : ''}
+                            ${l.expiryDate ? `<div>DLC: ${l.expiryDate}</div>` : ''}
+                            ${l.temperature ? `<div>${l.temperature}°C</div>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        },
+
+        renderContacts: function(container) {
+            let html = `
+                <div class="grid-4" style="align-items:end; margin-bottom:20px; background:#f0fdf4; padding:10px; border-radius:8px;">
+                    <div><label class="text-xs">Nom</label><input id="contact-name"></div>
+                    <div><label class="text-xs">Type</label><select id="contact-type"><option>Fournisseur</option><option>Maintenance</option><option>Urgence</option></select></div>
+                    <div><label class="text-xs">Tel</label><input id="contact-phone"></div>
+                    <button class="btn-success" onclick="app.addContact()">Ajouter</button>
+                </div>
+                <div class="grid-3">
+            `;
+            this.data.contacts.forEach(c => {
+                html += `
+                    <div class="card p-4" style="position:relative; ${c.type==='Urgence'?'border-left:4px solid red':''}">
+                        <button style="position:absolute; top:5px; right:5px; padding:4px;" class="btn-ghost text-danger" onclick="app.deleteContact('${c.id}')">✖</button>
+                        <div class="font-bold">${c.name}</div>
+                        <div class="text-xs text-muted uppercase">${c.type}</div>
+                        <div style="margin-top:10px; font-size:1.1em;">📞 <a href="tel:${c.phone}">${c.phone}</a></div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        },
+
+        // --- ACTIONS ---
+        addProduct: function() {
+            const name = document.getElementById('new-prod-name').value;
+            if(!name) return;
+            const newProd = { id: Date.now().toString(), name: name, category: 'Divers', unit: 'kg', quantity: 0, minStock: 5 };
+            this.data.products.push(newProd);
+            this.data.editingId = newProd.id; // Open edit immediately
+            this.save();
+        },
+
+        updateProduct: function() {
+            const id = this.data.editingId;
+            const p = this.data.products.find(x => x.id === id);
+            if(!p) return;
+            
+            p.name = document.getElementById('edit-name').value;
+            p.ref = document.getElementById('edit-ref').value;
+            p.category = document.getElementById('edit-cat').value;
+            p.unit = document.getElementById('edit-unit').value;
+            p.storage = document.getElementById('edit-storage').value;
+            p.supplier = document.getElementById('edit-supplier').value;
+            p.allergens = document.getElementById('edit-allergens').value;
+            p.minStock = parseFloat(document.getElementById('edit-min').value) || 0;
+            p.isBio = document.getElementById('edit-bio').checked;
+            
+            this.data.editingId = null;
+            this.save();
+        },
+
+        deleteProduct: function(id) {
+            if(confirm('Supprimer ce produit ?')) {
+                this.data.products = this.data.products.filter(p => p.id !== id);
+                this.save();
+            }
+        },
+
+        submitMovement: function(type) {
+            const prodId = document.getElementById('form-product').value;
+            const qty = parseFloat(document.getElementById('form-qty').value);
+            const user = document.getElementById('form-user').value;
+            
+            if(!prodId || !qty || !user) return alert('Champs manquants');
+            
+            const p = this.data.products.find(x => x.id === prodId);
+            
+            let log = {
+                id: Date.now().toString(),
+                date: new Date().toLocaleString('fr-FR'),
+                timestamp: Date.now(),
+                type: type,
+                productName: p.name,
+                quantity: qty,
+                user: user
+            };
+
+            if(type === 'ENTREE') {
+                const batch = document.getElementById('form-batch').value;
+                const dlc = document.getElementById('form-dlc').value;
+                if(!batch || !dlc) return alert('Lot et DLC obligatoires !');
+                log.batchNumber = batch;
+                log.expiryDate = dlc;
+                log.temperature = document.getElementById('form-temp').value;
+                p.quantity += qty;
+            } else {
+                if(p.quantity < qty && !confirm('Stock insuffisant. Continuer ?')) return;
+                p.quantity = Math.max(0, p.quantity - qty);
+            }
+
+            this.data.logs.unshift(log);
+            this.save();
+            alert('Mouvement validé');
+            // Reset form fields
+            document.getElementById('form-qty').value = '';
+            if(type === 'ENTREE') {
+                document.getElementById('form-batch').value = '';
+                document.getElementById('form-dlc').value = '';
+            }
+        },
+
+        addContact: function() {
+            const name = document.getElementById('contact-name').value;
+            const phone = document.getElementById('contact-phone').value;
+            if(!name) return;
+            this.data.contacts.push({
+                id: Date.now().toString(),
+                name: name,
+                type: document.getElementById('contact-type').value,
+                phone: phone
+            });
+            this.save();
+        },
+        
+        deleteContact: function(id) {
+            if(confirm('Supprimer ?')) {
+                this.data.contacts = this.data.contacts.filter(c => c.id !== id);
+                this.save();
+            }
+        },
+
+        exportLogs: function() {
+            const headers = ["Date;Type;Produit;Quantite;Responsable;Lot;DLC;Temp"];
+            const rows = this.data.logs.map(l => `${l.date};${l.type};${l.productName};${l.quantity};${l.user};${l.batchNumber||''};${l.expiryDate||''};${l.temperature||''}`);
+            this.downloadCSV(headers.concat(rows).join('\n'), 'registre_haccp.csv');
+        },
+
+        exportInventory: function() {
+            const headers = ["Nom;Ref;Categorie;Stock;Unite;Min;Fournisseur;Stockage"];
+            const rows = this.data.products.map(p => `${p.name};${p.ref||''};${p.category};${p.quantity};${p.unit};${p.minStock};${p.supplier||''};${p.storage||''}`);
+            this.downloadCSV(headers.concat(rows).join('\n'), 'inventaire.csv');
+        },
+
+        downloadCSV: function(content, filename) {
+            const blob = new Blob(["\uFEFF" + content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    };
+
+    // Démarrage
+    app.init();
+</script>
+</body>
+</html>

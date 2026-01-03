@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aide - Gest'Stock HACCP</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --text: #1e293b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        h1 { color: var(--primary); margin-bottom: 5px; }
+        h2 { color: var(--primary); margin-top: 30px; border-left: 4px solid var(--primary); padding-left: 10px; }
+        h3 { font-size: 1.1rem; margin-top: 20px; color: #475569; }
+        
+        .card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn-back {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background-color: #1d4ed8; }
+
+        .icon { font-size: 1.2em; vertical-align: middle; margin-right: 5px; }
+        .highlight { background-color: #fef9c3; padding: 2px 5px; border-radius: 4px; font-weight: bold; }
+        .password { font-family: monospace; background: #e2e8f0; padding: 4px 8px; border-radius: 4px; letter-spacing: 1px; }
+        
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
+        
+        .step { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; }
+        .step-num { background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; margin-top: 3px; }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .card { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="geststockapp.html" class="btn-back">⬅ Retour à l'application</a>
+
+    <div class="header">
+        <h1>Mode d'emploi</h1>
+        <p>Guide utilisateur pour Gest'Stock HACCP (Version Offline)</p>
+    </div>
+
+    <div class="card">
+        <h2>🚀 Installation (Tablette & Mobile)</h2>
+        <p>Cette application fonctionne <strong>sans internet</strong>. Pour l'avoir comme une vraie application :</p>
+        <div class="step">
+            <div class="step-num">1</div>
+            <div>Ouvrez le fichier <strong>geststockapp.html</strong> dans Chrome (Android) ou Safari (iPad).</div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div>Appuyez sur le menu "Partager" (carré avec flèche) ou les 3 petits points.</div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div>Choisissez <strong>"Sur l'écran d'accueil"</strong>.</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📦 1. Gestion du Stock (Onglet Stock)</h2>
+        <p>C'est votre tableau de bord principal. Il affiche la liste de tous vos produits.</p>
+        
+        <h3>Ajouter un produit</h3>
+        <p>En haut de la liste, tapez le nom du produit et cliquez sur <span class="highlight">➕ Créer</span>. La fiche technique s'ouvrira automatiquement pour compléter les détails (Unité, Catégorie, Stock Min...).</p>
+
+        <h3>Modifier / Supprimer</h3>
+        <ul>
+            <li><span class="icon">✏️</span> <strong>Crayon :</strong> Ouvre la fiche technique complète (pour changer le fournisseur, l'unité, les allergènes...).</li>
+            <li><span class="icon">🗑️</span> <strong>Corbeille :</strong> Supprime le produit de la liste (mais garde l'historique des mouvements passés).</li>
+        </ul>
+
+        <h3>Alertes Visuelles</h3>
+        <p>Si une ligne devient <span style="background:#fff1f2; color:#991b1b; padding:0 5px;">Rouge</span>, c'est que le stock est inférieur au "Stock Min" défini. Il faut commander !</p>
+    </div>
+
+    <div class="card">
+        <h2>➕ 2. Faire une Entrée (Réception HACCP)</h2>
+        <p>Allez dans l'onglet <strong>"Entrées"</strong> pour enregistrer une livraison.</p>
+        <ul>
+            <li><strong>Responsable :</strong> Votre nom.</li>
+            <li><strong>Produit :</strong> Choisissez dans la liste déroulante.</li>
+            <li><strong>Quantité :</strong> Ce que vous avez reçu.</li>
+            <li><strong>Température / Lot / DLC :</strong> <span class="highlight">OBLIGATOIRES</span> pour la traçabilité sanitaire.</li>
+        </ul>
+        <p><em>Le stock sera automatiquement augmenté.</em></p>
+    </div>
+
+    <div class="card">
+        <h2>➖ 3. Faire une Sortie (Déstockage)</h2>
+        <p>Allez dans l'onglet <strong>"Sorties"</strong> quand vous sortez un produit de la réserve pour la cuisine.</p>
+        <ul>
+            <li>Seuls le Nom et la Quantité sont requis.</li>
+            <li>Si vous essayez de sortir plus que ce qu'il y a en stock, une alerte vous préviendra.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>📜 4. Historique & Sécurité</h2>
+        <p>L'onglet <strong>"Historique"</strong> garde une trace de TOUT (qui a pris quoi, quand, quel numéro de lot).</p>
+
+        <h3>Exporter les données</h3>
+        <p>En haut à droite de l'application, vous avez deux boutons :</p>
+        <ul>
+            <li><strong>📄 Registre :</strong> Télécharge l'historique complet pour les contrôles d'hygiène.</li>
+            <li><strong>⬇ Inventaire :</strong> Télécharge l'état actuel du stock pour la comptabilité.</li>
+        </ul>
+
+        <h3>Vider l'historique (Reset)</h3>
+        <p>Pour remettre l'historique à zéro (par exemple en début d'année), cliquez sur le bouton rouge <span class="highlight">🗑️ Vider l'historique</span> dans l'onglet Historique.</p>
+        <p>⚠️ <strong>Sécurité :</strong> Un mot de passe vous sera demandé.</p>
+        <p>Le mot de passe est : <span class="password">Geststockreset</span></p>
+    </div>
+
+    <div class="card">
+        <h2>📒 5. Annuaire</h2>
+        <p>Utilisez cet onglet pour noter les numéros de vos fournisseurs, du réparateur frigo ou des urgences.</p>
+        <p>Sur une tablette ou un mobile, cliquer sur le numéro de téléphone lance l'appel directement.</p>
+    </div>
+
+    <div style="text-align:center; margin-top:40px; color:#94a3b8; font-size:0.9em;">
+        <p>Gest'Stock HACCP - Version 100% Locale<br>Aucune donnée n'est envoyée sur internet.</p>
+    </div>
+
+</div>
+
+</body>
+</html>

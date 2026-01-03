@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gest'Stock HACCP - La Traçabilité Libre</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #0ea5e9;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --surface: #ffffff;
+            --gradient: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .logo { font-weight: 900; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .logo span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-btn {
+            background: var(--dark);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+        .nav-btn:hover { transform: scale(1.05); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 160px 5% 100px;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        .hero h1 .highlight {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        .cta-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        /* Bouton Principal (Télécharger) */
+        .btn-main {
+            background: var(--gradient);
+            color: white;
+            padding: 15px 35px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 25px -10px rgba(37, 99, 235, 0.5);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -10px rgba(37, 99, 235, 0.6);
+        }
+
+        /* Bouton Démo (Nouveau) */
+        .btn-demo {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 13px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-demo:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Bouton Manuel (Discret) */
+        .btn-secondary {
+            color: #64748b;
+            padding: 15px 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .btn-secondary:hover { color: var(--dark); text-decoration: underline; }
+
+        /* --- BENTO GRID FEATURES --- */
+        .features {
+            padding: 50px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
+            border-color: var(--primary);
+        }
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            padding: 10px;
+            background: #f0f9ff;
+            border-radius: 12px;
+        }
+        .card h3 { font-size: 1.25rem; margin-bottom: 10px; font-weight: 700; }
+        .card p { color: #64748b; font-size: 0.95rem; }
+
+        .card.featured {
+            grid-column: span 2;
+            background: var(--dark);
+            color: white;
+            border: none;
+        }
+        .card.featured h3 { color: white; }
+        .card.featured p { color: #94a3b8; }
+        .card.featured .card-icon { background: rgba(255,255,255,0.1); }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 80px 20px 40px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .open-source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e0f2fe;
+            color: #0284c7;
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .card.featured { grid-column: span 1; }
+            .cta-group { flex-direction: column; width: 100%; }
+            .btn-main, .btn-demo, .btn-secondary { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">📦 <span>Gest'Stock</span></div>
+        <!-- Lien rapide vers la démo dans le menu aussi -->
+        <a href="demogeststock.html" class="nav-btn">Essayer maintenant</a>
+    </nav>
+
+    <section class="hero">
+        <div class="open-source-badge">✨ Open Source & Gratuit</div>
+        <h1>La traçabilité HACCP,<br><span class="highlight">enfin simple et locale.</span></h1>
+        <p>Fini les abonnements coûteux et les logiciels complexes. Gest'Stock est une solution professionnelle, gratuite et 100% autonome pour votre cuisine.</p>
+        
+        <div class="cta-group">
+            <a href="geststock.zip" class="btn-main">
+                Télécharger (ZIP) 📥
+            </a>
+            <a href="demogeststock.html" class="btn-demo">
+                Démo en ligne ▶️
+            </a>
+            <a href="helpgeststock.html" class="btn-secondary">Manuel</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="grid">
+            <div class="card featured">
+                <div class="card-icon">⚡️</div>
+                <h3>100% Hors Ligne (Offline)</h3>
+                <p>Pas besoin de Wifi au sous-sol ou en chambre froide. Gest'Stock fonctionne directement dans le navigateur de votre appareil. Vos données ne quittent jamais votre tablette.</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-icon">🛡️</div>
+                <h3>Conforme HACCP</h3>
+                <p>Suivi des lots, relevés de températures, DLC et export du registre sanitaire en un clic pour les contrôles.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">💸</div>
+                <h3>Zéro Coût</h3>
+                <p>Pas de frais mensuels, pas de licence. C'est un outil libre conçu pour aider les restaurateurs indépendants.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">📱</div>
+                <h3>Multi-Supports</h3>
+                <p>Compatible avec tout : iPad, Tablettes Android, PC, Mac ou même sur votre Smartphone.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🔒</div>
+                <h3>Sécurisé</h3>
+                <p>Vos données sont stockées localement. Une protection par mot de passe empêche la suppression accidentelle de l'historique.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Développé avec passion pour la restauration collective.</p>
+        <p style="margin-top:10px; opacity: 0.6;">Version 2025 • Licence Libre (MIT)</p>
+    </footer>
+
+</body>
+</html>
